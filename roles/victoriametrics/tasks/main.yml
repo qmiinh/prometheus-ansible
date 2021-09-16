@@ -30,7 +30,7 @@
   
 - name: create folder data for alertmanager
   file: 
-    path: "{{DATA_DIR}}/alertmanager" 
+    path: "{{DATA_DIR}}/alertmanagers" 
     state: directory 
     recurse: yes 
     owner: root
@@ -38,8 +38,8 @@
 
 - name: alertmanager config
   template:
-    src: alertmangers/alertmanager.yaml.j2
-    dest: "{{API_CONFIGURATION_PATH}}/{{role_name}}/alertmanager.yaml"
+    src: alertmanagers/alertmanager.yaml.j2
+    dest: "{{API_CONFIGURATION_PATH}}/alertmanagers/alertmanager.yaml"
   
 - name: create folder config for {{role_name}}
   file: 
