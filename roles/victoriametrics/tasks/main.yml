@@ -36,9 +36,9 @@
     owner: root
     group: root
 
-- name: alertmanager config
+- name: Copy alertmanager config
   template:
-    src: alertmanagers/alertmanager.yaml.j2
+    src: alertmanager.yaml.j2
     dest: "{{API_CONFIGURATION_PATH}}/alertmanagers/alertmanager.yaml"
   
 - name: create folder config for {{role_name}}
