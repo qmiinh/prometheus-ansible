@@ -5,6 +5,7 @@ services:
     user: root
     volumes:
       - {{API_CONFIGURATION_PATH}}/{{role_name}}/config/:/etc/prometheus/
+      - {{API_CONFIGURATION_PATH}}/{{role_name}}/rules/:/etc/prometheus/rules
       - {{DATA_DIR}}/{{role_name}}/data:/prometheus
       - /etc/hosts:/etc/hosts
       - /etc/localtime:/etc/localtime:ro

@@ -34,6 +34,15 @@ services:
       - {{DATA_DIR}}/grafanadata:/var/lib/grafana
     network_mode: host
     restart: always
-
+  alertmanager:
+    container_name: alertmanager
+    image:  prom/alertmanager
+    volumes:
+      - {{DATA_DIR}}/alertmanager/alertmanager.yaml:/config/alertmanager.yml
+    command:
+      - '--config.file=/config/alertmanager.yml'
+    user: root
+    network_mode: host
+    restart: always
 
 

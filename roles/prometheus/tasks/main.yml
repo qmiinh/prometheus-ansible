@@ -45,6 +45,19 @@
     src: prometheus.yaml.j2
     dest: "{{API_CONFIGURATION_PATH}}/{{role_name}}/config/prometheus.yml"
 
+- name: create folder config for {{role_name}} rules
+  file: 
+    path: "{{API_CONFIGURATION_PATH}}/{{role_name}}/rules" 
+    state: directory 
+    recurse: yes 
+    owner: root
+    group: root
+
+- name: copy docker-compose file
+  template:
+    src: rules/rule.yml.j2
+    dest: "{{API_CONFIGURATION_PATH}}/{{role_name}}/rules/rule.yml"
+
 - name: docker-compose pull
   shell: docker-compose --compatibility -f {{API_CONFIGURATION_PATH}}/{{role_name}}/docker-compose.prometheus.yml pull
 
