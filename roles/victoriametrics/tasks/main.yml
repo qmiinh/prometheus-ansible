@@ -6,7 +6,7 @@
   iptables:
     chain: INPUT
     protocol: tcp
-    source: any
+    source: 0.0.0.0
     destination_port: 8428
     jump: ACCEPT
     action: insert
@@ -20,6 +20,14 @@
     owner: root
     group: root
 
+- name: create folder data for grafana
+  file: 
+    path: "{{DATA_DIR}}/grafanadata" 
+    state: directory 
+    recurse: yes 
+    owner: root
+    group: root
+  
 - name: create folder config for {{role_name}}
   file: 
     path: "{{API_CONFIGURATION_PATH}}/{{role_name}}/config" 

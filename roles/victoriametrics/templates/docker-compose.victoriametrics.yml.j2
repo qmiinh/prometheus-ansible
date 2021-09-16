@@ -1,7 +1,7 @@
 version: '3'
 services:
   victoriametrics:
-    image: victoriametrics
+    image: victoriametrics/victoria-metrics
     container_name: "victoriametrics"
     restart: always
     network_mode: host
@@ -29,8 +29,6 @@ services:
     image: grafana/grafana:8.1.2
     depends_on:
       - "victoriametrics"
-    ports:
-      - 3000:3000
     volumes:
       - {{DATA_DIR}}/grafanadata:/var/lib/grafana
     network_mode: host

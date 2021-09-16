@@ -6,7 +6,7 @@
   iptables:
     chain: INPUT
     protocol: tcp
-    source: any
+    source: 0.0.0.0
     destination_port: 9090
     jump: ACCEPT
     action: insert

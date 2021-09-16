@@ -34,8 +34,38 @@
   shell: apt-get update && apt-get -y install python3-pip && apt-get install -y jq
   when: pip_version.rc != 0 or jq_version.rc != 0
 
-- name: Install docker-py if not exists
+# - name: Install docker-py if not exists
+#   pip:
+#     name: docker-py
+#   when: docker_py_version.rc != 0
+
+- name: Install aptitude using apt
+  apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+  when: docker_py_version.rc != 0
+
+- name: Install required system packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+  when: docker_py_version.rc != 0
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  when: docker_py_version.rc != 0
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+  when: docker_py_version.rc != 0
+
+- name: Update apt and install docker-ce
+  apt: update_cache=yes name=docker-ce state=latest
+  when: docker_py_version.rc != 0
+
+- name: Install Docker Module for Python
   pip:
-    name: docker-py
+    name: docker
   when: docker_py_version.rc != 0
 
