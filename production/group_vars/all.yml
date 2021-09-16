@@ -1,0 +1,2 @@
+API_CONFIGURATION_PATH: "/etc/config/"
+DATA_DIR: "/data"

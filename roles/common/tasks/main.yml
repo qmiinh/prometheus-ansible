@@ -1,0 +1,41 @@
+---
+
+- name: Check if docker is running
+  shell: ps aux | grep dockerd | grep -v grep
+  ignore_errors: yes
+  changed_when: false
+  register: service_docker_status
+
+- name: Check if pip is installed
+  shell: python3 --version
+  ignore_errors: yes
+  register: python3_version
+
+- name: Check if pip is installed
+  shell: pip3 -V
+  ignore_errors: yes
+  register: pip_version
+
+- name: Check if jq is installed
+  shell: jq -V
+  ignore_errors: yes
+  register: jq_version
+
+- name: Check if docker-py is installed
+  shell: pip3 list  --format=columns | egrep 'docker-py'
+  ignore_errors: yes
+  register: docker_py_version
+
+- name: Install python3
+  shell: apt-get update && apt install python3.8 -y
+  when: python3_version.rc != 0
+
+- name: Install python-pip and jq if not exists
+  shell: apt-get update && apt-get -y install python3-pip && apt-get install -y jq
+  when: pip_version.rc != 0 or jq_version.rc != 0
+
+- name: Install docker-py if not exists
+  pip:
+    name: docker-py
+  when: docker_py_version.rc != 0
+

@@ -1,0 +1,47 @@
+---
+- set_fact:
+    role_name: victoriametrics
+
+- name: Open 8428 port in iptables for Prometheus monitor server
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    source: any
+    destination_port: 8428
+    jump: ACCEPT
+    action: insert
+    comment: "ALLOW CONNECT FROM PROMETHEUS MONITOR SERVER "
+
+- name: create folder data for {{role_name}}
+  file: 
+    path: "{{DATA_DIR}}/{{role_name}}" 
+    state: directory 
+    recurse: yes 
+    owner: root
+    group: root
+
+- name: create folder config for {{role_name}}
+  file: 
+    path: "{{API_CONFIGURATION_PATH}}/{{role_name}}/config" 
+    state: directory 
+    recurse: yes 
+    owner: root
+    group: root
+
+- name: copy docker-compose file
+  template:
+    src: docker-compose.victoriametrics.yml.j2
+    dest: "{{API_CONFIGURATION_PATH}}/{{role_name}}/docker-compose.victoriametrics.yml"
+
+- name: docker-compose pull
+  shell: docker-compose --compatibility -f {{API_CONFIGURATION_PATH}}/{{role_name}}/docker-compose.victoriametrics.yml pull
+
+- name: docker-compose stop old container
+  shell: docker-compose --compatibility -f {{API_CONFIGURATION_PATH}}/{{role_name}}/docker-compose.victoriametrics.yml stop
+
+- name: docker-compose remove old container
+  shell: docker-compose --compatibility -f {{API_CONFIGURATION_PATH}}/{{role_name}}/docker-compose.victoriametrics.yml rm -f
+
+- name: Start {{ role_name }} docker-compose
+  shell: docker-compose --compatibility -f {{API_CONFIGURATION_PATH}}/{{role_name}}/docker-compose.victoriametrics.yml up -d
+  when: service_docker_status.rc == 0

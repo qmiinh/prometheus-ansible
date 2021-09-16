@@ -1,0 +1,40 @@
+version: '3'
+services:
+  victoriametrics:
+    image: victoriametrics
+    container_name: "victoriametrics"
+    restart: always
+    network_mode: host
+    user: root
+    logging:
+        driver: syslog
+        options:
+          syslog-facility: "local1"
+          syslog-format: "rfc3164"
+          tag: "{{role_name}}_victoriametrics_{{ENV}}"
+    command:
+      - '--storageDataPath=/storage'
+      - '--graphiteListenAddr=:2003'
+      - '--opentsdbListenAddr=:4242'
+      - '--httpListenAddr=:8428'
+      - '--influxListenAddr=:8089'
+      - '--retentionPeriod=48'
+    volumes:
+      - {{DATA_DIR}}/{{role_name}}:/storage
+      - /etc/hosts:/etc/hosts
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+  grafana-victoriametrics:
+    container_name: grafana-victoriametrics
+    image: grafana/grafana:8.1.2
+    depends_on:
+      - "victoriametrics"
+    ports:
+      - 3000:3000
+    volumes:
+      - {{DATA_DIR}}/grafanadata:/var/lib/grafana
+    network_mode: host
+    restart: always
+
+
+

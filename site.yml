@@ -1,0 +1,9 @@
+---
+- hosts: all
+  user: anhtt
+  become: yes
+  roles:
+    - {role: common, tags: always}
+    - {role: victoriametrics, tags: victoriametrics}
+    - {role: prometheus, tags: prometheus}
+    - {role: node-exporter, tags: node-exporter}

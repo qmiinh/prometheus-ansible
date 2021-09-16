@@ -1,0 +1,24 @@
+---
+#################################################
+# Running Node Exporter Container
+#################################################
+
+- name: Open 9100 port in iptables for Prometheus monitor server
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    source: any
+    destination_port: 9100
+    jump: ACCEPT
+    action: insert
+    comment: "ALLOW CONNECT FROM PROMETHEUS MONITOR SERVER "
+  become: yes
+
+
+- name: Persisten iptables rule
+  shell: iptables-save > /etc/iptables/rules.v4
+  ignore_errors: yes
+
+
+- name: Install Node Exporter
+  shell: docker run -dit --net="host" --pid="host" -v "/:/host:ro,rslave" --name="node-exporter" --log-driver=json-file --log-opt max-size=10m --log-opt max-file=5 --restart=always quay.io/prometheus/node-exporter:latest --path.rootfs=/host
