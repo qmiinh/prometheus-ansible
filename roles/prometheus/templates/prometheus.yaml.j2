@@ -21,3 +21,9 @@ remote_write:
 
 rule_files:
   - '/etc/prometheus/rules/*rules.yaml'
+
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - localhost:9093
