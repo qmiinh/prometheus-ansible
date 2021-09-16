@@ -37,10 +37,8 @@ services:
   alertmanager:
     container_name: alertmanager
     image:  prom/alertmanager
-#    volumes:
-#      - {{DATA_DIR}}/alertmanagers/alertmanager.yml:/config/alertmanager.yml
-    command:
-      - '--config.file=/config/alertmanager.yml'
+    volumes:
+      - {{DATA_DIR}}/alertmanagers/alertmanager.yml:/etc/alertmanager/alertmanager.yml
     user: root
     network_mode: host
     restart: always
