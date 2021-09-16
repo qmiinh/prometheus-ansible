@@ -38,7 +38,7 @@
 
 - name: Copy alertmanager config
   template:
-    src: alertmanager.yaml.j2
+    src: alertmanager.yml.j2
     dest: "{{API_CONFIGURATION_PATH}}/alertmanagers/alertmanager.yml"
   
 - name: create folder config for {{role_name}}
