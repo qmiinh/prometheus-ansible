@@ -30,7 +30,7 @@
   
 - name: create folder data for alertmanager
   file: 
-    path: "{{DATA_DIR}}/alertmanagers" 
+    path: "{{API_CONFIGURATION_PATH}}/alertmanagers" 
     state: directory 
     recurse: yes 
     owner: root
