@@ -1,0 +1,13 @@
+---
+
+- name: Down {{ role_name }} docker-compose
+  shell: docker-compose --compatibility -f {{API_CONFIGURATION_PATH}}/victoriametrics/docker-compose.victoriametrics.yml down -v
+  tag: down
+
+- name: Start {{ role_name }} docker-compose
+  shell: docker-compose --compatibility -f {{API_CONFIGURATION_PATH}}/prometheus/docker-compose.prometheus.yml down -v
+  tag: down
+
+- name: Stop Node Exporter
+  shell: docker stop node-exporter && docker rm node-exporter
+  tag: down

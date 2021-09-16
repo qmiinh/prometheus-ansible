@@ -4,6 +4,7 @@
   become: yes
   roles:
     - {role: common, tags: always}
-    - {role: victoriametrics, tags: victoriametrics}
-    - {role: prometheus, tags: prometheus}
-    - {role: node-exporter, tags: node-exporter}
+    - {role: victoriametrics, tags: victoriametrics,deploy}
+    - {role: prometheus, tags: prometheus,deploy}
+    - {role: node-exporter, tags: node-exporter,deploy}
+    - {role: down, tags: down}
