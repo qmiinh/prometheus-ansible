@@ -38,7 +38,7 @@ services:
     container_name: alertmanager
     image:  prom/alertmanager
     volumes:
-      - {{DATA_DIR}}/alertmanagers/alertmanager.yaml:/config/alertmanager.yml
+      - {{DATA_DIR}}/alertmanagers/alertmanager.yml:/config/alertmanager.yml
     command:
       - '--config.file=/config/alertmanager.yml'
     user: root
