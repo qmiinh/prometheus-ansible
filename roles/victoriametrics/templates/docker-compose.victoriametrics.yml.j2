@@ -27,6 +27,7 @@ services:
   grafana-victoriametrics:
     container_name: grafana-victoriametrics
     image: grafana/grafana:8.1.2
+    user: root
     depends_on:
       - "victoriametrics"
     volumes:

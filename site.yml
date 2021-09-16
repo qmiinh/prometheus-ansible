@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  user: anhtt
+  user: root
   become: yes
   roles:
     - {role: common, tags: always}

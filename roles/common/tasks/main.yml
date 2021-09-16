@@ -21,10 +21,15 @@
   ignore_errors: yes
   register: jq_version
 
-- name: Check if docker-py is installed
-  shell: pip3 list  --format=columns | egrep 'docker-py'
+- name: Check if docker is installed
+  shell: docker -v
   ignore_errors: yes
   register: docker_py_version
+
+- name: Check if docker-compose is installed
+  shell: docker-compose -v
+  ignore_errors: yes
+  register: docker_compose_version
 
 - name: Install python3
   shell: apt-get update && apt install python3.8 -y
@@ -33,11 +38,6 @@
 - name: Install python-pip and jq if not exists
   shell: apt-get update && apt-get -y install python3-pip && apt-get install -y jq
   when: pip_version.rc != 0 or jq_version.rc != 0
-
-# - name: Install docker-py if not exists
-#   pip:
-#     name: docker-py
-#   when: docker_py_version.rc != 0
 
 - name: Install aptitude using apt
   apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
@@ -57,6 +57,7 @@
 - name: Add Docker Repository
   apt_repository:
     repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    update_cache: yes
     state: present
   when: docker_py_version.rc != 0
 
@@ -64,8 +65,38 @@
   apt: update_cache=yes name=docker-ce state=latest
   when: docker_py_version.rc != 0
 
-- name: Install Docker Module for Python
-  pip:
-    name: docker
+- name: install docker
+  apt:
+    name: "{{item}}"
+    state: latest
+    update_cache: yes
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
   when: docker_py_version.rc != 0
 
+- name: assicurati che docker sia attivo
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  when: docker_py_version.rc != 0
+
+- name: Add remote "ubuntu" user to "docker" group
+  remote_user: ubuntu
+  user:
+    name: "ubuntu"
+    group: "docker"
+    append: yes
+  tags:
+    - docker
+  when: docker_py_version.rc != 0
+
+- name: Install docker-compose
+  remote_user: ubuntu
+  get_url: 
+    url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 'u+x,g+x'
+  when: docker_compose_version.rc != 0
