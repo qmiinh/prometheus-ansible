@@ -38,7 +38,7 @@ services:
     container_name: alertmanager
     image:  prom/alertmanager
     volumes:
-      - {{DATA_DIR}}/alertmanagers/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - {{API_CONFIGURATION_PATH}}/alertmanagers/alertmanager.yml:/etc/alertmanager/alertmanager.yml
     user: root
     network_mode: host
     restart: always
